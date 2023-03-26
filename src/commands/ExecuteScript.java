@@ -2,6 +2,7 @@ package commands;
 
 import collectionManager.CollectionOfLabWorks;
 import commandsHandlers.CommandsReader;
+import commandsHandlers.Invoker;
 import exceptions.WrongNumberOfArgsException;
 import validation.NumberOfArgsVal;
 
@@ -15,6 +16,8 @@ import java.util.Scanner;
 public class ExecuteScript implements Command{
     private static final ArrayDeque<String> history = new ArrayDeque<>();
     private final CollectionOfLabWorks collection;
+
+    public static boolean flag = false;
     public ExecuteScript(CollectionOfLabWorks collection) {
         this.collection = collection;
     }
@@ -38,22 +41,30 @@ public class ExecuteScript implements Command{
                 if (history.contains(line)) {
                     System.out.println();
                     System.out.println("There is call of this script in your script, fix it!");
-                    System.out.println();
                     line = reader.readLine();
                 }
                 if (line.contains("execute_script")) {
                     history.add(line);
                 }
                 if (!"".equals(line.trim())) {
+                    System.out.println();
+                    System.out.println(line);
                     if ("add".equals(line.trim()) || "add_if_min".equals(line.trim())
                             || line.contains("update") || "remove_lower".equals(line.trim())) {
+                        flag = true;
                         StringBuilder list = new StringBuilder();
+                        String command;
                         for (int i = 0; i < 10; i++) {
-                            list.append(reader.readLine() + '\n');
+                            command = reader.readLine();
+                            if (Invoker.commands.containsKey(command)) {
+                                break;
+                            }
+                            list.append(command + '\n');
                         }
                         Scanner scanner = new Scanner(list.toString());
                         CommandsReader cr = new CommandsReader(collection, scanner);
                         cr.scriptCommandAddReader(line);
+                        flag = false;
                     } else {
                         CommandsReader.invoker.invoke(line);
                     }

@@ -2,7 +2,6 @@ package commandsHandlers;
 
 import commands.*;
 import collectionManager.CollectionOfLabWorks;
-import data.LabWork;
 import fileHandlers.FileWriter;
 
 import java.util.NoSuchElementException;
@@ -90,7 +89,6 @@ public class CommandsReader {
         } catch (NoSuchElementException e) {
             System.out.println();
             System.out.println("You made a mistake in adding new element in the script. Fix it and try again!");
-            System.out.println();
         }
     }
 }
