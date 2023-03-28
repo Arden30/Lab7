@@ -41,13 +41,17 @@ public class Invoker {
      */
     public void invoke(String command) {
         String[] string_command = command.split(" ");
-        String commandName = string_command[0].toLowerCase();
-        String[] commandsArgs = Arrays.copyOfRange(string_command, 1, string_command.length);
-        if (commands.containsKey(commandName)) {
-            Command executingCommand = commands.get(commandName);
-            executingCommand.execute(commandsArgs);
-        } else {
-            System.out.println("No such command!");
+        try {
+            String commandName = string_command[0].toLowerCase();
+            String[] commandsArgs = Arrays.copyOfRange(string_command, 1, string_command.length);
+            if (commands.containsKey(commandName)) {
+                Command executingCommand = commands.get(commandName);
+                executingCommand.execute(commandsArgs);
+            } else {
+                System.out.println("No such command!");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You entered empty string!");
         }
     }
 }
