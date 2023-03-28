@@ -2,6 +2,7 @@
 
 <ArrayDeque>
   <LabWork>
+    <id>1</id>
     <name>CollectionManager</name>
     <coordinates>
       <x>12</x>
@@ -19,6 +20,7 @@
     </discipline>
   </LabWork>
   <LabWork>
+    <id>2</id>
     <name>Cyclic programs</name>
     <coordinates>
       <x>20</x>

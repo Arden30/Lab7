@@ -62,6 +62,7 @@ public class CollectionOfLabWorks {
      */
     public void addLabWork(LabWork lab) {
         collection.add(lab);
+        System.out.println("Element is successfully added!");
     }
 
     /**

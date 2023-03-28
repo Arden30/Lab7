@@ -37,7 +37,7 @@ public class Invoker {
 
     /**
      * Method, which invokes commands from console or script
-     * @param command
+     * @param command Command which was put in console
      */
     public void invoke(String command) {
         String[] string_command = command.split(" ");
