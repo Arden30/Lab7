@@ -1,8 +1,8 @@
 package commands;
 
-import collectionManager.CollectionOfLabWorks;
-import commandsHandlers.CommandsReader;
-import commandsHandlers.Invoker;
+import collection_Manager.CollectionOfLabWorks;
+import commands_Handlers.CommandsReader;
+import commands_Handlers.Invoker;
 import exceptions.WrongNumberOfArgsException;
 import validation.NumberOfArgsVal;
 

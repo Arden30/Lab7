@@ -1,4 +1,4 @@
-package collectionManager;
+package collection_Manager;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;

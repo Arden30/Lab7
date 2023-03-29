@@ -1,9 +1,9 @@
 client
-collectionManager
+collection_Manager
 commands
-commandsHandlers
+commands_Handlers
 comparator
 data
 exceptions
-fileHandlers
+file_Handlers
 validation

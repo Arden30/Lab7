@@ -1,6 +1,6 @@
 package commands;
 
-import commandsHandlers.CommandsReader;
+import commands_Handlers.CommandsReader;
 import exceptions.WrongNumberOfArgsException;
 import validation.NumberOfArgsVal;
 

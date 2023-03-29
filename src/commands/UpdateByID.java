@@ -1,9 +1,7 @@
 package commands;
 
-import collectionManager.CollectionGenerator;
-import collectionManager.CollectionOfLabWorks;
-import comparator.DisciplineComparator;
-import data.LabWork;
+import collection_Manager.CollectionGenerator;
+import collection_Manager.CollectionOfLabWorks;
 import exceptions.NoSuchIDException;
 import exceptions.WrongNumberOfArgsException;
 import validation.NumberOfArgsVal;

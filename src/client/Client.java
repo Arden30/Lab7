@@ -1,8 +1,8 @@
 package client;
 
-import commandsHandlers.CommandsReader;
-import fileHandlers.FileReader;
-import collectionManager.CollectionOfLabWorks;
+import commands_Handlers.CommandsReader;
+import file_Handlers.FileReader;
+import collection_Manager.CollectionOfLabWorks;
 
 import java.util.Scanner;
 
@@ -14,8 +14,12 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) {
         FileReader fileReader = new FileReader();
-        CollectionOfLabWorks collection = fileReader.readFile(args[0]);
-        CommandsReader cr = new CommandsReader(collection, new Scanner(System.in));
-        cr.consoleReader();
+        try {
+            CollectionOfLabWorks collection = fileReader.readFile(args[0]);
+            CommandsReader cr = new CommandsReader(collection, new Scanner(System.in));
+            cr.consoleReader();
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("You didn't enter file!");
+        }
     }
 }

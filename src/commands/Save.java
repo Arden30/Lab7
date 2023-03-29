@@ -1,8 +1,8 @@
 package commands;
 
-import collectionManager.CollectionOfLabWorks;
+import collection_Manager.CollectionOfLabWorks;
 import exceptions.WrongNumberOfArgsException;
-import fileHandlers.FileWriter;
+import file_Handlers.FileWriter;
 import validation.NumberOfArgsVal;
 
 /**
@@ -30,7 +30,6 @@ public class Save implements Command{
         try {
             NumberOfArgsVal.checkNumberOfArgs(commandArgs, 0);
             writer.writeToFile(collection);
-            System.out.println("Collection is successfully saved!");
         } catch (WrongNumberOfArgsException e) {
             System.out.println(e.getMessage());
         }

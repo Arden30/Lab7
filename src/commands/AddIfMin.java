@@ -1,7 +1,7 @@
 package commands;
 
-import collectionManager.CollectionGenerator;
-import collectionManager.CollectionOfLabWorks;
+import collection_Manager.CollectionGenerator;
+import collection_Manager.CollectionOfLabWorks;
 import exceptions.ElementIsNotMinException;
 import exceptions.WrongNumberOfArgsException;
 import validation.NumberOfArgsVal;

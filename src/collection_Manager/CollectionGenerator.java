@@ -1,4 +1,4 @@
-package collectionManager;
+package collection_Manager;
 
 import commands.ExecuteScript;
 import data.Coordinates;
@@ -65,7 +65,7 @@ public class CollectionGenerator {
             collection.setName(sc.nextLine());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newLabName();
             }
         }
@@ -83,12 +83,12 @@ public class CollectionGenerator {
             coordinates.setX(Long.parseLong(sc.nextLine()));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number or empty string in X coordinate, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newX();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newX();
             }
         }
@@ -106,12 +106,12 @@ public class CollectionGenerator {
             coordinates.setY(Double.parseDouble(sc.nextLine()));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number or empty string in Y coordinate, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newY();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newY();
             }
         }
@@ -133,12 +133,12 @@ public class CollectionGenerator {
             collection.setMinimalPoint(Long.parseLong(minimalPoint));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number in min points, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newMinPoints();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newMinPoints();
             }
         }
@@ -160,12 +160,12 @@ public class CollectionGenerator {
             collection.setMaximumPoint(Integer.parseInt(maximalPoint));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number in max points, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newMaxPoints();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newMaxPoints();
             }
         }
@@ -187,12 +187,12 @@ public class CollectionGenerator {
             collection.setPersonalQualitiesMinimum(Long.parseLong(pqPoint));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number in personal min qualities, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newPersonalQualitiesMinimum();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newPersonalQualitiesMinimum();
             }
         }
@@ -214,7 +214,7 @@ public class CollectionGenerator {
                 collection.setDifficulty(Difficulty.valueOf(diff));
             } catch (IllegalArgumentException e) {
                 System.out.println("There is no such difficulty, try again!");
-                if (ExecuteScript.flag) {
+                if (!ExecuteScript.flag) {
                     newDifficulty();
                 }
             }
@@ -233,7 +233,7 @@ public class CollectionGenerator {
             discipline.setName(sc.nextLine());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newDisciplineName();
             }
         }
@@ -251,12 +251,12 @@ public class CollectionGenerator {
             discipline.setLectureHours(Long.parseLong(sc.nextLine()));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number or empty string in lecture hours, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newLectureHours();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newLectureHours();
             }
         }
@@ -274,12 +274,12 @@ public class CollectionGenerator {
             discipline.setPracticeHours(Long.parseLong(sc.nextLine()));
         } catch (NumberFormatException e) {
             System.out.println("I guess you entered not a number or empty string in practice hours, try again!");
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newPracticeHours();
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
-            if (ExecuteScript.flag) {
+            if (!ExecuteScript.flag) {
                 newPracticeHours();
             }
         }

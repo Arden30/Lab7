@@ -1,4 +1,4 @@
-package fileHandlers;
+package file_Handlers;
 
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
@@ -6,7 +6,7 @@ import com.thoughtworks.xstream.security.AnyTypePermission;
 import data.LabWork;
 
 import com.thoughtworks.xstream.XStream;
-import collectionManager.CollectionOfLabWorks;
+import collection_Manager.CollectionOfLabWorks;
 
 import java.io.FileInputStream;
 import java.io.IOException;

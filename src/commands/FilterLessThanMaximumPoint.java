@@ -1,6 +1,6 @@
 package commands;
 
-import collectionManager.CollectionOfLabWorks;
+import collection_Manager.CollectionOfLabWorks;
 import exceptions.CollectionIsEmptyException;
 import exceptions.NoMaxPointsException;
 import exceptions.WrongNumberOfArgsException;

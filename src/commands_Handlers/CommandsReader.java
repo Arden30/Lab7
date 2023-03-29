@@ -1,8 +1,8 @@
-package commandsHandlers;
+package commands_Handlers;
 
 import commands.*;
-import collectionManager.CollectionOfLabWorks;
-import fileHandlers.FileWriter;
+import collection_Manager.CollectionOfLabWorks;
+import file_Handlers.FileWriter;
 
 import java.util.NoSuchElementException;
 import java.util.Scanner;

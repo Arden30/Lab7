@@ -1,6 +1,6 @@
-package fileHandlers;
+package file_Handlers;
 
-import collectionManager.CollectionOfLabWorks;
+import collection_Manager.CollectionOfLabWorks;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 
@@ -23,6 +23,7 @@ public class FileWriter {
             String xmlText = "<?xml version=\"1.0\" encoding = \"UTF-8\"?>\n\n" + xStream.toXML(collection.getCollection().toArray());
             String parsedXmlText = xmlText.replaceAll("object-array", "ArrayDeque");
             out.write(parsedXmlText.getBytes());
+            System.out.println("Collection is successfully saved!");
         } catch(IOException e) {
             System.out.println("There are no write access rights to the file or something wrong with file path, try again!");
         }
