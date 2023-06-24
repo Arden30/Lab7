@@ -5,12 +5,13 @@ import common.data.Difficulty;
 import common.exceptions.WrongArgException;
 import common.exceptions.WrongNumberOfArgsException;
 import common.util_common.Request;
+import common.util_common.RequestType;
 
 public class RequestCreator {
     private Request createRequestWithoutArgs(CommandToSend command) {
         try {
             CommandValidation.validateNumberOfArgs(command.getCommandArgs(), 0);
-            return new Request(command.getCommandName());
+            return new Request(command.getCommandName(), RequestType.COMMAND);
         } catch (WrongNumberOfArgsException e) {
             System.out.println(e.getMessage());
             return null;
@@ -21,7 +22,7 @@ public class RequestCreator {
             CommandValidation.validateNumberOfArgs(command.getCommandArgs(), 0);
             CollectionGenerator generator = new CollectionGenerator();
             generator.newElement();
-            return new Request(command.getCommandName(), generator.getNewElement());
+            return new Request(command.getCommandName(), generator.getNewElement(), RequestType.COMMAND);
         } catch (WrongNumberOfArgsException e) {
             System.out.println(e.getMessage());
             return null;
@@ -34,7 +35,7 @@ public class RequestCreator {
                     "ID must be greater then 0",
                     Long::parseLong,
                     command.getCommandArgs()[0]);
-            return new Request(command.getCommandName(), id);
+            return new Request(command.getCommandName(), id, RequestType.COMMAND);
         } catch (WrongNumberOfArgsException | WrongArgException e) {
             System.out.println(e.getMessage());
             return null;
@@ -53,7 +54,7 @@ public class RequestCreator {
                     command.getCommandArgs()[0]);
             CollectionGenerator generator = new CollectionGenerator();
             generator.newElement();
-            return new Request(command.getCommandName(), id, generator.getNewElement());
+            return new Request(command.getCommandName(), id, generator.getNewElement(), RequestType.COMMAND);
         } catch (WrongNumberOfArgsException | WrongArgException e) {
             System.out.println(e.getMessage());
             return null;
@@ -70,7 +71,7 @@ public class RequestCreator {
                     "Maximum points must be greater then 0",
                     Integer::parseInt,
                     command.getCommandArgs()[0]);
-            return new Request(command.getCommandName(), maxPoint);
+            return new Request(command.getCommandName(), maxPoint, RequestType.COMMAND);
         } catch (WrongNumberOfArgsException | WrongArgException e) {
             System.out.println(e.getMessage());
             return null;
@@ -87,7 +88,7 @@ public class RequestCreator {
                     "Difficulty must be from this list: " + Difficulty.showEnum(),
                     diff -> Difficulty.valueOf(diff.toUpperCase()),
                     command.getCommandArgs()[0]);
-            return new Request(command.getCommandName(), difficulty);
+            return new Request(command.getCommandName(), difficulty, RequestType.COMMAND);
         } catch (WrongNumberOfArgsException | WrongArgException e) {
             System.out.println(e.getMessage());
             return null;
@@ -97,7 +98,7 @@ public class RequestCreator {
         }
     }
 
-    public Request createRequestOfCommand(CommandToSend command) {
+    public Request createRequestOfCommand(CommandToSend command, String username) {
         String name = command.getCommandName();
         Request request;
         if (AvailableCommands.COMMANDS_WITHOUT_ARGS.contains(name)) {
@@ -115,6 +116,9 @@ public class RequestCreator {
         } else {
             System.out.println("There is no such command, type HELP to get list on commands");
             request = null;
+        }
+        if (request != null && request.getLabArgument() != null) {
+            request.getLabArgument().setUsername(username);
         }
         return request;
     }

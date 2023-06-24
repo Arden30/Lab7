@@ -8,6 +8,11 @@ import common.data.Difficulty;
 import common.data.LabWork;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
+
 import common.exceptions.*;
 /**
  * Class which keeps your collection of LabWorks and has methods for work with it
@@ -16,12 +21,15 @@ import common.exceptions.*;
 @XStreamAlias("ArrayDeque")
 public class CollectionManager {
 
+    private final Lock readLock;
+    private final Lock writeLock;
+
     private static long idCounter = 1;
     /**
      *Field, which keeps your collection
      */
     @XStreamImplicit
-    private final ArrayDeque<LabWork> collection = new ArrayDeque<>();
+    private ArrayDeque<LabWork> collection;
     /**
      * Field, which keeps date of initialization of the element in collection
      */
@@ -34,11 +42,21 @@ public class CollectionManager {
 
     /**
      * Basic constructor, which sets date of initialization and filename
-     * @param fileName String mame of file
      */
-    public CollectionManager(String fileName) {
+    public CollectionManager() {
         this.initializationDate = LocalDateTime.now();
-        this.fileName = fileName;
+        ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+        readLock = readWriteLock.readLock();
+        writeLock = readWriteLock.writeLock();
+    }
+
+    public void setLabWorks(ArrayDeque<LabWork> labWorks) {
+        try {
+            writeLock.lock();
+            this.collection = labWorks;
+        } finally {
+            writeLock.unlock();
+        }
     }
 
     /**
@@ -53,12 +71,22 @@ public class CollectionManager {
      * @return Collection
      */
     public ArrayDeque<LabWork> getCollection() {
-        return collection;
+        try {
+            readLock.lock();
+            return collection;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     public void reassignIds() {
-        for (LabWork lab : collection) {
-            lab.setId(idCounter++);
+        try {
+            writeLock.lock();
+            for (LabWork lab : collection) {
+                lab.setId(idCounter++);
+            }
+        } finally {
+            writeLock.unlock();
         }
     }
     /**
@@ -66,8 +94,43 @@ public class CollectionManager {
      * @param lab New element to add
      */
     public void addLabWork(LabWork lab) {
-        lab.setId(idCounter++);
-        collection.add(lab);
+        try {
+            writeLock.lock();
+            collection.add(lab);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    public boolean checkMin(LabWork labWork) {
+        try {
+            readLock.lock();
+            boolean check = true;
+            for (LabWork lab : collection) {
+                if (lab.compareLab(labWork) <= 0) {
+                    check = false;
+                    break;
+                }
+            }
+            return check;
+        } finally {
+            readLock.unlock();
+        }
+    }
+
+    public List<Long> returnIDsOfLower(LabWork labWork) {
+        try {
+            readLock.lock();
+            List<Long> ids = new ArrayList<>();
+            for (LabWork lab : collection) {
+                if (lab.compareLab(labWork) <= 0) {
+                    ids.add(lab.getId());
+                }
+            }
+            return ids;
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
@@ -91,7 +154,12 @@ public class CollectionManager {
      * @return Type of the collection
      */
     public String collectionType() {
-        return collection.getClass().getName();
+        try {
+            readLock.lock();
+            return collection.getClass().getName();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
@@ -99,15 +167,25 @@ public class CollectionManager {
      * @return Int number of elements
      */
     public int collectionSize() {
-        return collection.size();
+        try {
+            readLock.lock();
+            return collection.size();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
      * Method, which prints main information about collection
      */
     public String info() {
-        return "Type of collection: " + collectionType() + ",\n" + "Initialization date: " + initializationDate
-                + ",\n" + "Amount of elements: " + collectionSize();
+        try {
+            readLock.lock();
+            return "Type of collection: " + collectionType() + ",\n" + "Initialization date: " + initializationDate
+                    + ",\n" + "Amount of elements: " + collectionSize();
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
@@ -147,10 +225,15 @@ public class CollectionManager {
      * @throws CollectionIsEmptyException Exception for the case of empty collection
      */
     public LabWork head() throws CollectionIsEmptyException{
-        if (!collection.isEmpty()) {
-            return collection.getFirst();
-        } else {
-            throw new CollectionIsEmptyException("Collection is empty!");
+        try {
+            readLock.lock();
+            if (!collection.isEmpty()) {
+                return collection.getFirst();
+            } else {
+                throw new CollectionIsEmptyException("Collection is empty!");
+            }
+        } finally {
+            readLock.unlock();
         }
     }
 
@@ -159,9 +242,12 @@ public class CollectionManager {
      * @param id ID of the element
      * @throws NoSuchIDException Exception for the case when there is no element with such ID
      */
-    public void removeByID(Long id) throws NoSuchIDException {
-        if (!collection.removeIf(mb -> Objects.equals(mb.getId(), id))) {
-            throw new NoSuchIDException("There is no lab with such ID, try again!");
+    public void removeByID(Long id) {
+        try {
+            writeLock.lock();
+            collection.removeIf(mb -> Objects.equals(mb.getId(), id));
+        } finally {
+            writeLock.unlock();
         }
     }
 
@@ -171,14 +257,16 @@ public class CollectionManager {
      * @param lab New element of the collection
      * @throws NoSuchIDException Exception for the case when there is no element with such ID
      */
-    public void updateByID(Long id, LabWork lab) throws NoSuchIDException {
-            if (collection.removeIf(mb -> Objects.equals(mb.getId(), id))) {
+    public void updateByID(Long id, LabWork lab) {
+        try {
+            writeLock.lock();
+            if (collection.removeIf(mb -> Objects.equals(mb.getId(), id)))
                 lab.setId(id);
-                collection.add(lab);
-            } else {
-                throw new NoSuchIDException("There is no lab with such ID, try again!");
-            }
+            collection.add(lab);
+        } finally {
+            readLock.unlock();
         }
+    }
 
     /**
      * Method, which adds new element in the collection if it's lower than others
@@ -217,24 +305,29 @@ public class CollectionManager {
      * @throws NoMaxPointsException Exception for the case of absence of the element
      */
     public ArrayDeque<LabWork> filterLessThanMaximumPoint(Integer maximumPoints) throws CollectionIsEmptyException, NoMaxPointsException{
-        boolean flag = true;
-        ArrayDeque<LabWork> copy = new ArrayDeque<>();
-        if (!collection.isEmpty()) {
-            for (LabWork lab: collection) {
-                if (lab.getMaximumPoint() != null) {
-                    if (lab.getMaximumPoint() < maximumPoints) {
-                        flag = false;
-                        copy.add(lab);
+        try {
+            readLock.lock();
+            boolean flag = true;
+            ArrayDeque<LabWork> copy = new ArrayDeque<>();
+            if (!collection.isEmpty()) {
+                for (LabWork lab : collection) {
+                    if (lab.getMaximumPoint() != null) {
+                        if (lab.getMaximumPoint() < maximumPoints) {
+                            flag = false;
+                            copy.add(lab);
+                        }
                     }
                 }
+                if (flag) {
+                    throw new NoMaxPointsException("There are no elements with appropriate maximum points!");
+                }
+            } else {
+                throw new CollectionIsEmptyException("Collection is empty!");
             }
-            if (flag) {
-                throw new NoMaxPointsException("There are no elements with appropriate maximum points!");
-            }
-        } else {
-            throw new CollectionIsEmptyException("Collection is empty!");
+            return copy;
+        } finally {
+            readLock.unlock();
         }
-        return copy;
     }
 
     /**
@@ -244,28 +337,33 @@ public class CollectionManager {
      * @throws NoDifficultyException Exception for the case of absence of the difficulty in each element of the collection
      */
     public ArrayDeque<LabWork> filterGreaterThanDifficulty(Difficulty difficulty) throws CollectionIsEmptyException, NoDifficultyException {
-        boolean flag1 = true;
-        boolean flag2 = true;
-        ArrayDeque<LabWork> copy = new ArrayDeque<>();
-        if (!collection.isEmpty()) {
-            for (LabWork lab : collection) {
-                if (lab.getDifficulty() != null) {
-                    flag1 = false;
-                    if (lab.compareDifficulty(difficulty) > 0) {
-                        flag2 = false;
-                        copy.add(lab);
+        try {
+            readLock.lock();
+            boolean flag1 = true;
+            boolean flag2 = true;
+            ArrayDeque<LabWork> copy = new ArrayDeque<>();
+            if (!collection.isEmpty()) {
+                for (LabWork lab : collection) {
+                    if (lab.getDifficulty() != null) {
+                        flag1 = false;
+                        if (lab.compareDifficulty(difficulty) > 0) {
+                            flag2 = false;
+                            copy.add(lab);
+                        }
                     }
                 }
+                if (flag1) {
+                    throw new NoDifficultyException("There are no elements with difficulty!");
+                }
+                if (flag2) {
+                    return null;
+                }
+                return copy;
+            } else {
+                throw new CollectionIsEmptyException("Collection is empty!");
             }
-            if (flag1) {
-                throw new NoDifficultyException("There are no elements with difficulty!");
-            }
-            if (flag2) {
-                return null;
-            }
-            return copy;
-        } else {
-            throw new CollectionIsEmptyException("Collection is empty!");
+        } finally {
+            readLock.unlock();
         }
     }
 
@@ -274,16 +372,22 @@ public class CollectionManager {
      * @throws CollectionIsEmptyException Exception for the case of empty collection
      */
     public ArrayDeque<Discipline> printFieldDescendingDiscipline() throws CollectionIsEmptyException{
-        if (!collection.isEmpty()) {
-            ArrayList<LabWork> sortedLabs = new ArrayList<>(collection);
-            ArrayDeque<Discipline> copy = new ArrayDeque<>();
-            sortedLabs.sort((new DisciplineComparator()).reversed());
-            for (LabWork lr: sortedLabs) {
-                copy.add(lr.getDiscipline());
+        try {
+            readLock.lock();
+            if (!collection.isEmpty()) {
+                List<LabWork> sortedLabs = new ArrayList<>(collection);
+                ArrayDeque<Discipline> copy = new ArrayDeque<>();
+                sortedLabs = sortedLabs.stream().sorted((new DisciplineComparator()).reversed()).collect(Collectors.toList());
+                //sortedLabs.sort((new DisciplineComparator()).reversed());
+                for (LabWork lr : sortedLabs) {
+                    copy.add(lr.getDiscipline());
+                }
+                return copy;
+            } else {
+                throw new CollectionIsEmptyException("Collection is empty!");
             }
-            return copy;
-        } else {
-            throw new CollectionIsEmptyException("Collection is empty!");
+        } finally {
+            readLock.unlock();
         }
     }
 }

@@ -11,11 +11,14 @@ public class Response implements Serializable {
     private String messageToResponse;
     private LabWork labToResponse;
     private ArrayDeque<?> collectionToResponse;
-
+    private boolean success = true;
     public Response(String messageToResponse) {
         this.messageToResponse = messageToResponse;
     }
-
+    public Response(String messageToResponse, boolean success) {
+        this.messageToResponse = messageToResponse;
+        this.success = success;
+    }
     public Response(String messageToResponse, LabWork labToResponse) {
         this.messageToResponse = messageToResponse;
         this.labToResponse = labToResponse;
@@ -25,7 +28,6 @@ public class Response implements Serializable {
         this.messageToResponse = messageToResponse;
         this.collectionToResponse = collectionToResponse;
     }
-
 
     public Response(LabWork labToResponse) {
         this.labToResponse = labToResponse;
@@ -47,6 +49,10 @@ public class Response implements Serializable {
         return collectionToResponse;
     }
 
+    public boolean isSuccess() {
+        return success;
+    }
+
     public String getInfoAboutResponse() {
         return "Response contains: " + (messageToResponse == null ? "" : "message")
                 + (labToResponse == null ? "" : ", LabWork")
@@ -56,6 +62,7 @@ public class Response implements Serializable {
     @Override
     public String toString() {
         StringBuilder collection = new StringBuilder();
+        StringBuilder ids = new StringBuilder();
         if (collectionToResponse != null) {
             List<?> labs = new ArrayList<>(collectionToResponse);
             //sortedLabs = sortedLabs.stream().sorted(Comparator.comparing(LabWork::getId)).collect(Collectors.toList());
@@ -64,6 +71,7 @@ public class Response implements Serializable {
             }
             collection = new StringBuilder(collection.substring(0, collection.length() - 1));
         }
+
         return (messageToResponse == null ? "" : messageToResponse)
                 + (labToResponse == null ? "" : "\n" + labToResponse)
                 + ((collectionToResponse == null) ? "" : "\n"

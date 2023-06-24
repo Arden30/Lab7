@@ -23,7 +23,7 @@ public class AvailableCommands {
                 "print_field_descending_discipline"
         );
         Collections.addAll(COMMANDS_WITH_ID_ARG,
-                "remove_by_id"
+                "remove"
         );
         Collections.addAll(COMMANDS_WITH_MAXPOINT_ARG,
                 "filter_less_than_maximum_point"

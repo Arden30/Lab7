@@ -22,8 +22,7 @@ public class CommandManager {
                 AbstractClientCommand FilterGreaterThanDifficulty,
                 AbstractClientCommand PrintFieldDescendingDiscipline,
                 AbstractClientCommand Head,
-                AbstractServerCommand ServerExit,
-                AbstractServerCommand ServerSave) {
+                AbstractServerCommand ServerExit) {
         ServerConfig.getClientAvailableCommands().put(Show.getName(), Show);
         ServerConfig.getClientAvailableCommands().put(Exit.getName(), Exit);
         ServerConfig.getClientAvailableCommands().put(Help.getName(), Help);
@@ -41,7 +40,6 @@ public class CommandManager {
         ServerConfig.getClientAvailableCommands().put(PrintFieldDescendingDiscipline.getName(), PrintFieldDescendingDiscipline);
         ServerConfig.getClientAvailableCommands().put(Head.getName(), Head);
         ServerConfig.getServerAvailableCommands().put(ServerExit.getName(), ServerExit);
-        ServerConfig.getServerAvailableCommands().put(ServerSave.getName(), ServerSave);
     }
     public Response executeClientCommand(Request request) {
         return ServerConfig.getClientAvailableCommands().get(request.getCommandName()).execute(request);

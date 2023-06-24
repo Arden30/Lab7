@@ -26,7 +26,6 @@ public class Coordinates implements Serializable {
      * Constant, which keeps maximum values of Y coordinate
      */
     public static final double MAX_Y = 101;
-
     /**
      * Getter of X coordinate
      * @return long X coordinate

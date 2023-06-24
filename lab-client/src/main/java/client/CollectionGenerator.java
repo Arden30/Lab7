@@ -146,7 +146,7 @@ public class CollectionGenerator {
      * Method, which reads and sets new name of discipline
      */
     public void newDisciplineName() {
-        String name = CommandValidation.validateStringInput("Enter the name of the lab work: " ,
+        String name = CommandValidation.validateStringInput("Enter the name of the discipline: " ,
                 false,
                 sc);
         discipline.setName(name);

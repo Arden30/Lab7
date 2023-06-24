@@ -1,8 +1,10 @@
 package server.client_commands;
 
+import common.data.LabWork;
 import common.util_common.Request;
 import common.util_common.Response;
 import server.AbstractCommands.AbstractClientCommand;
+import server.data_base.DataBaseManager;
 import server.util_server.CollectionManager;
 import common.exceptions.ElementIsNotMinException;
 
@@ -11,19 +13,23 @@ import common.exceptions.ElementIsNotMinException;
  */
 public class AddIfMin extends AbstractClientCommand {
     private final CollectionManager collection;
+    private final DataBaseManager dataBaseManager;
 
-    public AddIfMin(CollectionManager collection) {
+    public AddIfMin(CollectionManager collection, DataBaseManager dataBaseManager) {
         super("add_if_min", 0, "adds new element to your collection if it would be minimal in your collection");
         this.collection = collection;
+        this.dataBaseManager = dataBaseManager;
     }
 
     @Override
     public Response execute(Request request) {
-        try {
-            collection.addIfMin(request.getLabArgument());
-            return new Response("New element was successfully added!", request.getLabArgument());
-        } catch (ElementIsNotMinException e) {
-            return new Response(e.getMessage());
-        }
+            if (collection.checkMin(request.getLabArgument())) {
+                LabWork labWork = request.getLabArgument();
+                Long id = dataBaseManager.addLab(labWork, request.getUsername());
+                labWork.setId(id);
+                collection.addLabWork(labWork);
+                return new Response("New min element was added!", request.getLabArgument());
+            } else
+                return new Response("Element is not min!");
     }
 }

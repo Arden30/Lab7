@@ -7,14 +7,16 @@ import java.util.Scanner;
 
 public class ClientCommandListener {
     private final Scanner sc;
+    private final String username;
 
-    public ClientCommandListener(InputStream inputStream) {
+    public ClientCommandListener(InputStream inputStream, String username) {
+        this.username = username;
         sc = new Scanner(inputStream);
     }
 
     public CommandToSend readCommand() {
         try {
-            System.out.println("Enter a command: ");
+            System.out.print("Enter a command: \n" + username + ">");
             String[] splitInput = sc.nextLine().trim().split(" ");
             String commandName = splitInput[0].toLowerCase();
             String[] commandsArgs = Arrays.copyOfRange(splitInput, 1, splitInput.length);

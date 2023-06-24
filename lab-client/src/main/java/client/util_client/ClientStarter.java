@@ -11,20 +11,25 @@ import java.util.*;
 
 public class ClientStarter {
     private final Scanner scanner = new Scanner(System.in);
-    private final ClientCommandListener commandListener = new ClientCommandListener(System.in);
+    private ClientCommandListener commandListener;
     private final RequestCreator requestCreator = new RequestCreator();
     private ClientSocket clientSocket;
     private boolean statusOfCommandListening = true;
     private static final Set<String> HISTORY_OF_SCRIPTS = new HashSet<>();
+    private List<String> user;
     public void startClient() {
         inputAddress();
         inputPort();
-        System.out.println("Welcome, client!");
+        UserRegLog userRegLog = new UserRegLog(clientSocket);
+        while (user == null) {
+            user = userRegLog.authentication();
+        }
+        commandListener = new ClientCommandListener(System.in, user.get(0));
         while (statusOfCommandListening) {
             CommandToSend command = commandListener.readCommand();
             if (command != null) {
                 if ("exit".equalsIgnoreCase(command.getCommandName())) {
-                    System.out.println("Client disabled");
+                    System.out.println("Goodbye, " + user.get(0) + "!");
                     toggleStatus();
                 } else if (AvailableCommands.SCRIPT_ARGUMENT_COMMAND.equals(command.getCommandName())) {
                     executeScript(command.getCommandArgs());
@@ -95,10 +100,12 @@ public class ClientStarter {
     }
 
     private boolean sendRequest(CommandToSend command) {
-        Request request = requestCreator.createRequestOfCommand(command);
+        Request request = requestCreator.createRequestOfCommand(command, user.get(0));
         if (request != null) {
             request.setCurrentTime(LocalTime.now());
             request.setClientInfo(clientSocket.getAddress() + " " + clientSocket.getPort());
+            request.setUsername(user.get(0));
+            request.setPassword(user.get(1));
             try {
                 clientSocket.sendRequest(request);
                 return true;

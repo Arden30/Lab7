@@ -34,7 +34,7 @@ public class LabWork implements Serializable {
     /**
      * Field, which keeps creation date of element (can't be null and must be automatically generated)
      */
-    private java.time.LocalDateTime creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
+    private java.time.LocalDateTime creationDate = LocalDateTime.now(); //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
     /**
      * Field, which keeps minimum points of element (can be null, must be positive)
@@ -61,6 +61,7 @@ public class LabWork implements Serializable {
      */
     private Discipline discipline; //Поле не может быть null
 
+    private String username;
     /**
      * Basic constructor, which sets unique ID and current creation date
      */
@@ -81,7 +82,7 @@ public class LabWork implements Serializable {
      * Setter of unique ID
      */
     public void setId() {
-        this.id = currentId++;
+        this.id = id;
     }
 
     /**
@@ -95,8 +96,8 @@ public class LabWork implements Serializable {
     /**
      * Setter of current creation date
      */
-    public void setCreationDate() {
-        this.creationDate = LocalDateTime.now();
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public LocalDateTime getCreationDate() {
@@ -242,7 +243,12 @@ public class LabWork implements Serializable {
     public int compareDifficulty(Difficulty difficulty) {
         return Integer.compare(this.getDifficulty().toString().length(), difficulty.toString().length());
     }
-
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public String getUsername() {
+        return username;
+    }
     /**
      * Method, which returns element of collection as a string
      * @return String element of collection
@@ -258,6 +264,6 @@ public class LabWork implements Serializable {
                 ", maximumPoint=" + maximumPoint +
                 ", personalQualitiesMinimum=" + personalQualitiesMinimum +
                 ", difficulty=" + difficulty +
-                ", discipline: " + discipline;
+                ", discipline: " + discipline + ", owner: " + username;
     }
 }

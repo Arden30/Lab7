@@ -50,7 +50,7 @@ public class ServerSocket {
         datagramChannel.close();
     }
 
-    public Request listenForRequest() throws IOException, ClassNotFoundException {
+    public AddressRequest listenForRequest() throws IOException, ClassNotFoundException {
         if (selector.select(selectorDelay) == 0) {
             return null;
         }
@@ -66,13 +66,13 @@ public class ServerSocket {
                 ((Buffer) packet).flip();
                 byte[] bytes = new byte[packet.remaining()];
                 packet.get(bytes);
-                return DeSerializer.deSerializeRequest(bytes);
+                return new AddressRequest(DeSerializer.deSerializeRequest(bytes), socketAddress);
             }
         }
         return null;
     }
 
-    public void sendResponse(Response response) throws IOException {
+    public void sendResponse(Response response, SocketAddress socketAddress) throws IOException {
         ByteBuffer bufferToSend = Serializer.serializeResponse(response);
         datagramChannel.send(bufferToSend, socketAddress);
     }

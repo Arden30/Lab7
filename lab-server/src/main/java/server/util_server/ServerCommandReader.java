@@ -10,7 +10,7 @@ public class ServerCommandReader {
     }
     public String readCommand() {
         try {
-            System.out.println("Enter command(save or exit):");
+            System.out.println("Enter EXIT if you want to close server:");
             return sc.nextLine().trim().toLowerCase();
         } catch (NoSuchElementException e) {
             System.out.println("An invalid character has been entered, forced shutdown!");
